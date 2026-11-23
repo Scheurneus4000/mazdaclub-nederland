@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<defs>
+<radialGradient id="bg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9e9ec"/></radialGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<linearGradient id="al" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c7f87"/><stop offset=".3" stop-color="#f2f3f5"/><stop offset=".5" stop-color="#b5b8be"/><stop offset=".75" stop-color="#dfe1e4"/><stop offset="1" stop-color="#6c6f77"/></linearGradient>
+<radialGradient id="rd" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#ec1d1d"/><stop offset="1" stop-color="#a00000"/></radialGradient>
+<pattern id="kn" width="9" height="12" patternUnits="userSpaceOnUse"><rect width="4" height="12" fill="#000" opacity=".16"/></pattern>
+<symbol id="cap" viewBox="0 0 120 190">
+<ellipse cx="60" cy="176" rx="56" ry="12" fill="#000" opacity=".25"/>
+<path d="M6 30v140c0 8 24 14 54 14s54-6 54-14V30z" fill="url(#al)"/>
+<path d="M6 92v78c0 8 24 14 54 14s54-6 54-14V92z" fill="url(#kn)"/>
+<path d="M6 92c0 8 24 14 54 14s54-6 54-14" fill="none" stroke="#5c5f66" stroke-width="2"/>
+<ellipse cx="60" cy="30" rx="54" ry="16" fill="#cfd1d5"/>
+<ellipse cx="60" cy="29" rx="46" ry="12.5" fill="url(#rd)"/>
+<g transform="translate(60 29) scale(1.25 .4) translate(-20.5 -20)"><path d="M8 27.5 14.5 12h2.6l3.4 8.6 3.4-8.6h2.6L33 27.5h-3.3l-4.4-10.7-3.6 9h-2.4l-3.6-9-4.4 10.7Z" fill="#fff"/></g>
+<path d="M18 40v120" stroke="#fff" stroke-opacity=".55" stroke-width="6" stroke-linecap="round"/>
+</symbol>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="600" rx="300" ry="26" fill="url(#sh)"/>
+<use href="#cap" x="228" y="236" width="132" height="209"/>
+<use href="#cap" x="440" y="236" width="132" height="209"/>
+<use href="#cap" x="150" y="372" width="150" height="238"/>
+<use href="#cap" x="500" y="372" width="150" height="238"/>
+<text x="400" y="680" fill="#8e8e96" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" letter-spacing="6" text-anchor="middle">SET VAN 4 · ALUMINIUM · ROOD GEANODISEERD</text>
+</svg>

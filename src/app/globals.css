@@ -1,0 +1,150 @@
+@import "tailwindcss" source("../..");
+@import "tw-animate-css";
+
+/* ─── Huisstijl MazdaClub Nederland: wit + Mazda-rood (#C00000) ─── */
+:root {
+  --radius: 0.625rem;
+  --background: #ffffff;
+  --foreground: #111114;
+  --card: #ffffff;
+  --card-foreground: #111114;
+  --popover: #ffffff;
+  --popover-foreground: #111114;
+  --primary: #c00000;
+  --primary-hover: #a30000;
+  --primary-foreground: #ffffff;
+  --secondary: #111114;
+  --secondary-foreground: #ffffff;
+  --muted: #f5f5f6;
+  --muted-foreground: #60636b;
+  --accent: #fdf2f2;
+  --accent-foreground: #8a0000;
+  --destructive: #b42318;
+  --border: #e6e6e9;
+  --input: #dcdce1;
+  --ring: #c00000;
+  --ink: #0b0b0c;
+  --surface: #fafafa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-surface: var(--surface);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-barlow), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --animate-hero-zoom: hero-zoom 18s ease-out both;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hero-zoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::selection {
+    background: var(--primary);
+    color: #fff;
+  }
+  :focus-visible {
+    outline-color: var(--ring);
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-display text-xs font-semibold uppercase tracking-[0.22em] text-primary;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-px w-8 bg-primary;
+  }
+  .heading-xl {
+    @apply font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl;
+  }
+  .heading-lg {
+    @apply font-display text-3xl font-bold uppercase leading-[1] tracking-tight sm:text-4xl lg:text-5xl;
+  }
+  .heading-md {
+    @apply font-display text-2xl font-bold uppercase tracking-tight sm:text-3xl;
+  }
+  .prose-club {
+    @apply max-w-none text-[15px] leading-relaxed text-foreground/85;
+  }
+  .prose-club p { @apply my-4; }
+  .prose-club h2 { @apply mt-10 mb-3 font-display text-2xl font-bold uppercase tracking-tight text-foreground; }
+  .prose-club h3 { @apply mt-8 mb-2 text-lg font-semibold text-foreground; }
+  .prose-club ul { @apply my-4 list-disc space-y-1.5 pl-5; }
+  .prose-club ol { @apply my-4 list-decimal space-y-1.5 pl-5; }
+  .prose-club a { @apply font-medium text-primary underline underline-offset-4; }
+  .prose-club strong { @apply font-semibold text-foreground; }
+  .prose-club blockquote { @apply my-6 border-l-4 border-primary bg-accent/60 py-3 pr-4 pl-5 italic text-ink/80; }
+  .prose-club hr { @apply my-8 border-border; }
+  .prose-club > :first-child { @apply mt-0; }
+  .prose-club li > p { @apply my-0; }
+  .prose-club img { @apply my-6 h-auto max-w-full rounded-xl; }
+
+  /* Teksteditor in het beheerpaneel */
+  .rich-editor .ProseMirror { @apply min-h-[220px] px-4 py-3 outline-none; }
+}
+
+/* Lightbox (yet-another-react-lightbox) in clubkleuren */
+.yarl__root {
+  --yarl__color_backdrop: rgba(8, 8, 9, 0.96);
+  --yarl__color_button_active: #c00000;
+}
+
+/* Printen (bijv. pakbon): navigatie, cookiebanner en footer weglaten */
+@media print {
+  body > header, body header.fixed, footer, [data-cookie-banner], body > a[href="#main"] {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+}

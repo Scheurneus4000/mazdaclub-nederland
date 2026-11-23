@@ -1,0 +1,50 @@
+# Nachtelijke databaseback-up naar Cloudflare R2 (of een andere S3-opslag).
+#
+# Instellen (eenmalig) in GitHub → Settings → Secrets and variables → Actions:
+#   BACKUP_DATABASE_URL   directe (niet-gepoolde) database-URL, bijv. de "unpooled" URL van Neon
+#   BACKUP_S3_ENDPOINT    https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+#   BACKUP_S3_BUCKET      bijv. mazdaclub-backups (een PRIVÉ bucket, niet de publieke foto-bucket)
+#   BACKUP_S3_ACCESS_KEY_ID / BACKUP_S3_SECRET_ACCESS_KEY   R2 API-token met schrijfrechten op die bucket
+#
+# Bewaartermijn: stel in R2 bij de bucket een "Object lifecycle rule" in (bijv. verwijderen na 60 dagen).
+# Terugzetten: zie docs/DEPLOYMENT.md → "Back-up terugzetten".
+name: Database-back-up
+
+on:
+  schedule:
+    - cron: "30 2 * * *" # elke nacht om 02:30 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Controleer configuratie
+        env:
+          DB: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          if [ -z "$DB" ]; then echo "::notice::BACKUP_DATABASE_URL is niet ingesteld; back-up overgeslagen."; echo "SKIP=1" >> "$GITHUB_ENV"; fi
+
+      - name: Dump maken (pg_dump 17)
+        if: env.SKIP != '1'
+        env:
+          DB: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          STAMP=$(date -u +%Y-%m-%d_%H%M)
+          echo "FILE=mazdaclub_${STAMP}.dump" >> "$GITHUB_ENV"
+          docker run --rm -e DB postgres:17-alpine sh -c 'pg_dump --format=custom --no-owner --no-privileges "$DB"' > "mazdaclub_${STAMP}.dump"
+          test -s "mazdaclub_${STAMP}.dump"
+          ls -lh "mazdaclub_${STAMP}.dump"
+
+      - name: Uploaden naar R2
+        if: env.SKIP != '1'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          aws s3 cp "$FILE" "s3://${{ secrets.BACKUP_S3_BUCKET }}/database/$FILE" --endpoint-url "${{ secrets.BACKUP_S3_ENDPOINT }}"

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<defs>
+<radialGradient id="bg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9e9ec"/></radialGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".26"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<pattern id="tx" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#fff" opacity=".09"/><circle cx="6" cy="6" r="1" fill="#000" opacity=".08"/></pattern>
+<linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b7e86"/><stop offset="1" stop-color="#55585f"/></linearGradient>
+<linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d81010"/><stop offset="1" stop-color="#9e0000"/></linearGradient>
+<linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36363c"/><stop offset="1" stop-color="#18181b"/></linearGradient>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="618" rx="300" ry="24" fill="url(#sh)"/>
+<g transform="rotate(-3 400 540)">
+<rect x="150" y="500" width="500" height="96" rx="28" fill="url(#g3)"/>
+<rect x="150" y="500" width="500" height="96" rx="28" fill="url(#tx)"/>
+<path d="M178 548h444" stroke="#000" stroke-opacity=".3" stroke-width="3"/>
+</g>
+<g transform="rotate(2 400 450)">
+<rect x="165" y="404" width="470" height="96" rx="28" fill="url(#g1)"/>
+<rect x="165" y="404" width="470" height="96" rx="28" fill="url(#tx)"/>
+<path d="M192 452h416" stroke="#000" stroke-opacity=".25" stroke-width="3"/>
+</g>
+<g transform="rotate(-1.5 400 350)">
+<rect x="180" y="300" width="440" height="108" rx="30" fill="url(#g2)"/>
+<rect x="180" y="300" width="440" height="108" rx="30" fill="url(#tx)"/>
+<path d="M206 354h388" stroke="#000" stroke-opacity=".22" stroke-width="3"/>
+<path d="M210 312c80-8 300-8 380 0" stroke="#fff" stroke-opacity=".2" stroke-width="6" fill="none" stroke-linecap="round"/>
+<rect x="470" y="316" width="118" height="46" rx="6" fill="#fff"/>
+<text x="529" y="337" fill="#C00000" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="15" font-weight="900" letter-spacing="1" text-anchor="middle">MAZDACLUB</text>
+<text x="529" y="354" fill="#6b6b73" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" letter-spacing="3" text-anchor="middle">MICROVEZEL</text>
+</g>
+<text x="400" y="680" fill="#8e8e96" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" letter-spacing="6" text-anchor="middle">SET VAN 3 · 40 × 40 CM · 380 GSM</text>
+</svg>

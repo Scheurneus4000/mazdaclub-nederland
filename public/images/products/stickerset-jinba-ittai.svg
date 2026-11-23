@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<defs>
+<radialGradient id="bg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9e9ec"/></radialGradient>
+<filter id="ds" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-opacity=".18"/></filter>
+<symbol id="m" viewBox="0 0 40 40"><rect width="40" height="40" rx="9" fill="#C00000"/><path d="M8 27.5 14.5 12h2.6l3.4 8.6 3.4-8.6h2.6L33 27.5h-3.3l-4.4-10.7-3.6 9h-2.4l-3.6-9-4.4 10.7Z" fill="#fff"/></symbol>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<g transform="rotate(-4 400 410)">
+<rect x="150" y="120" width="500" height="580" rx="20" fill="#fdfdfd" filter="url(#ds)"/>
+<rect x="150" y="120" width="500" height="580" rx="20" fill="none" stroke="#e2e2e6" stroke-width="2"/>
+<rect x="184" y="156" width="432" height="150" rx="22" fill="#fff" stroke="#d6d6db" stroke-width="1.5" stroke-dasharray="6 5"/>
+<rect x="194" y="166" width="412" height="130" rx="16" fill="#C00000"/>
+<text x="400" y="240" fill="#fff" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="48" font-weight="900" text-anchor="middle" textLength="350" lengthAdjust="spacingAndGlyphs">JINBA ITTAI</text>
+<text x="400" y="276" fill="#fff" opacity=".85" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700" letter-spacing="9" text-anchor="middle">ÉÉN MET JE AUTO</text>
+<circle cx="276" cy="420" r="84" fill="#fff" stroke="#d6d6db" stroke-width="1.5" stroke-dasharray="6 5"/>
+<circle cx="276" cy="420" r="74" fill="#111114"/>
+<use href="#m" x="240" y="384" width="72" height="72"/>
+<g transform="translate(520 425)">
+<path d="M0-96A166 166 0 0 1 83 48A166 166 0 0 1-83 48A166 166 0 0 1 0-96Z" fill="#fff" stroke="#d6d6db" stroke-width="1.5" stroke-dasharray="6 5"/>
+<path d="M0-80A139 139 0 0 1 69 40A139 139 0 0 1-69 40A139 139 0 0 1 0-80Z" fill="#fff" stroke="#C00000" stroke-width="12"/>
+<text y="16" fill="#111" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="18" font-weight="900" text-anchor="middle" textLength="82" lengthAdjust="spacingAndGlyphs">ROTARY</text>
+</g>
+<rect x="184" y="540" width="200" height="80" rx="14" fill="#fff" stroke="#d6d6db" stroke-width="1.5" stroke-dasharray="6 5"/>
+<rect x="194" y="550" width="180" height="60" rx="9" fill="#111114"/>
+<text x="284" y="593" fill="#fff" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="36" font-weight="900" letter-spacing="6" text-anchor="middle">M<tspan fill="#ff2b2b">C</tspan>N</text>
+<rect x="404" y="540" width="212" height="80" rx="40" fill="#fff" stroke="#d6d6db" stroke-width="1.5" stroke-dasharray="6 5"/>
+<rect x="414" y="550" width="192" height="60" rx="30" fill="#fff" stroke="#111" stroke-width="3"/>
+<text x="510" y="587" fill="#111" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="700" letter-spacing="2" text-anchor="middle">SINDS 2009</text>
+<text x="400" y="670" fill="#9a9aa2" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" letter-spacing="6" text-anchor="middle">MAZDACLUB NEDERLAND · STICKERSET</text>
+</g>
+</svg>

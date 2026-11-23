@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<defs>
+<radialGradient id="bg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9e9ec"/></radialGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<linearGradient id="ch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fdfdfd"/><stop offset=".45" stop-color="#9da0a7"/><stop offset=".7" stop-color="#e9eaed"/><stop offset="1" stop-color="#6f727a"/></linearGradient>
+<filter id="ds" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".18"/></filter>
+<path id="l" d="M300 30C300 260 340 420 392 480"/>
+<path id="r" d="M408 480C460 420 500 260 500 30"/>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="752" rx="140" ry="12" fill="url(#sh)"/>
+<use href="#l" fill="none" stroke="#9e0000" stroke-width="50"/>
+<use href="#r" fill="none" stroke="#9e0000" stroke-width="50"/>
+<use href="#l" fill="none" stroke="#C00000" stroke-width="44"/>
+<use href="#r" fill="none" stroke="#d10a0a" stroke-width="44"/>
+<text fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" letter-spacing="3" dy="6"><textPath href="#l">MAZDACLUB NEDERLAND • MAZDACLUB NEDERLAND •</textPath></text>
+<text fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" letter-spacing="3" dy="6"><textPath href="#r">MAZDACLUB NEDERLAND • MAZDACLUB NEDERLAND •</textPath></text>
+<rect x="366" y="470" width="68" height="40" rx="8" fill="url(#ch)"/>
+<rect x="392" y="508" width="16" height="22" fill="url(#ch)"/>
+<path d="M400 528c-20 0-30 18-30 34s12 34 30 34 30-16 30-34" fill="none" stroke="url(#ch)" stroke-width="9" stroke-linecap="round"/>
+<rect x="388" y="592" width="24" height="18" rx="5" fill="url(#ch)"/>
+<g filter="url(#ds)">
+<rect x="290" y="606" width="220" height="140" rx="14" fill="#fff"/>
+</g>
+<rect x="290" y="606" width="220" height="34" rx="14" fill="#111114"/>
+<rect x="290" y="626" width="220" height="14" fill="#111114"/>
+<rect x="382" y="614" width="36" height="8" rx="4" fill="#e9e9ec"/>
+<g transform="translate(336 690) scale(1.15) translate(-20 -20)">
+<rect width="40" height="40" rx="9" fill="#C00000"/>
+<path d="M8 27.5 14.5 12h2.6l3.4 8.6 3.4-8.6h2.6L33 27.5h-3.3l-4.4-10.7-3.6 9h-2.4l-3.6-9-4.4 10.7Z" fill="#fff"/>
+</g>
+<text x="372" y="686" fill="#111114" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="20" font-weight="900">MEMBER</text>
+<text x="372" y="706" fill="#8e8e96" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="700" letter-spacing="2">MCN-00001</text>
+</svg>

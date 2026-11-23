@@ -1,0 +1,482 @@
+// MazdaClub Nederland – databaseschema (PostgreSQL + Prisma)
+// Bedragen worden altijd opgeslagen in centen (Int) om afrondingsfouten te voorkomen.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Gebruikers & lidmaatschap
+// ─────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  phone            String?
+  street           String?
+  houseNumber      String?
+  postalCode       String?
+  city             String?
+  country          String    @default("NL")
+  licensePlate     String?
+  carModel         String?
+  role             Role      @default(USER)
+  marketingConsent Boolean   @default(false)
+  mollieCustomerId String?   @unique
+  /// Moment waarop het e-mailadres is bevestigd (via verificatielink, uitnodiging of wachtwoordreset).
+  emailVerifiedAt  DateTime?
+  lastLoginAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  membership              Membership?
+  orders                  Order[]
+  registrations           EventRegistration[]
+  payments                Payment[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+
+  @@index([lastName])
+  @@index([createdAt])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum MembershipStatus {
+  PENDING // aangemaakt, eerste betaling nog niet voldaan
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model Membership {
+  id                   String           @id @default(cuid())
+  userId               String           @unique
+  memberNumber         Int              @unique @default(autoincrement())
+  status               MembershipStatus @default(PENDING)
+  startedAt            DateTime?
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  autoRenew            Boolean          @default(true)
+  mollieSubscriptionId String?          @unique
+  reminderSentAt       DateTime?
+  cancelledAt          DateTime?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([status, currentPeriodEnd])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Evenementen
+// ─────────────────────────────────────────────────────────────
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
+model Event {
+  id                   String      @id @default(cuid())
+  slug                 String      @unique
+  title                String
+  summary              String
+  description          String      @db.Text
+  startsAt             DateTime
+  endsAt               DateTime?
+  registrationDeadline DateTime?
+  locationName         String
+  address              String?
+  city                 String
+  capacity             Int
+  priceNonMember       Int         @default(500) // centen – €5,00 voor niet-leden
+  priceMember          Int         @default(0) // centen – gratis voor leden
+  imageUrl             String?
+  status               EventStatus @default(DRAFT)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  registrations EventRegistration[]
+  albums        Album[]
+
+  @@index([status, startsAt])
+}
+
+enum RegistrationStatus {
+  PENDING // wacht op betaling (plek 30 minuten gereserveerd)
+  CONFIRMED
+  CANCELLED
+}
+
+model EventRegistration {
+  id                 String             @id @default(cuid())
+  eventId            String
+  userId             String?
+  firstName          String
+  lastName           String
+  email              String
+  phone              String
+  licensePlate       String
+  remarks            String?            @db.Text
+  isMember           Boolean            @default(false)
+  amount             Int // centen
+  status             RegistrationStatus @default(PENDING)
+  confirmationSentAt DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  event    Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  payments Payment[]
+
+  @@index([eventId, status])
+  @@index([email])
+  @@index([userId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Webshop
+// ─────────────────────────────────────────────────────────────
+
+model ProductCategory {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  sortOrder   Int       @default(0)
+  products    Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String   @db.Text
+  categoryId  String
+  basePrice   Int // centen, incl. btw
+  images      String[]
+  active      Boolean  @default(true)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category   ProductCategory  @relation(fields: [categoryId], references: [id])
+  variants   ProductVariant[]
+  orderItems OrderItem[]
+
+  @@index([categoryId, active])
+  @@index([name])
+}
+
+model ProductVariant {
+  id         String  @id @default(cuid())
+  productId  String
+  name       String // bijv. "Maat L / Zwart" of "Standaard"
+  sku        String  @unique
+  price      Int? // centen; leeg = basisprijs van het product
+  stock      Int     @default(0)
+  attributes Json? // bijv. { "maat": "L", "kleur": "Zwart" }
+  active     Boolean @default(true)
+  sortOrder  Int     @default(0)
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING // wacht op betaling (voorraad gereserveerd)
+  PAID
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum ShippingMethod {
+  POSTNL_NL
+  POSTNL_BE
+  PICKUP_EVENT
+}
+
+model Order {
+  id                    String         @id @default(cuid())
+  orderNumber           String         @unique
+  userId                String?
+  email                 String
+  firstName             String
+  lastName              String
+  phone                 String?
+  street                String?
+  houseNumber           String?
+  postalCode            String?
+  city                  String?
+  country               String         @default("NL")
+  shippingMethod        ShippingMethod @default(POSTNL_NL)
+  status                OrderStatus    @default(PENDING)
+  subtotal              Int // centen, vóór korting
+  discount              Int            @default(0)
+  shippingCost          Int            @default(0)
+  total                 Int
+  memberDiscountApplied Boolean        @default(false)
+  notes                 String?        @db.Text
+  trackingCode          String?
+  confirmationSentAt    DateTime?
+  paidAt                DateTime?
+  shippedAt             DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  user     User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items    OrderItem[]
+  payments Payment[]
+
+  @@index([status, createdAt])
+  @@index([userId])
+  @@index([email])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  productId   String?
+  variantId   String?
+  productName String
+  variantName String
+  sku         String
+  unitPrice   Int // centen, na eventuele ledenkorting
+  quantity    Int
+  lineTotal   Int
+
+  order   Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variant ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Betalingen (Mollie primair, Stripe optioneel, Mock voor ontwikkeling)
+// ─────────────────────────────────────────────────────────────
+
+enum PaymentProvider {
+  MOLLIE
+  STRIPE
+  MOCK
+  MANUAL // handmatig geregistreerd door een beheerder (contant, overboeking, gratis/erelid)
+}
+
+enum PaymentType {
+  ORDER
+  EVENT
+  MEMBERSHIP
+}
+
+enum PaymentStatus {
+  OPEN
+  PENDING
+  PAID
+  FAILED
+  CANCELED
+  EXPIRED
+  REFUNDED
+}
+
+model Payment {
+  id                String          @id @default(cuid())
+  provider          PaymentProvider
+  providerPaymentId String?         @unique
+  type              PaymentType
+  status            PaymentStatus   @default(OPEN)
+  amount            Int // centen
+  currency          String          @default("EUR")
+  method            String? // ideal, bancontact, creditcard, applepay, ...
+  description       String
+  checkoutUrl       String?         @db.Text
+  userId            String?
+  orderId           String?
+  registrationId    String?
+  membershipId      String?
+  isRecurring       Boolean         @default(false)
+  paidAt            DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  user         User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  order        Order?             @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  registration EventRegistration? @relation(fields: [registrationId], references: [id], onDelete: SetNull)
+  membership   Membership?        @relation(fields: [membershipId], references: [id], onDelete: SetNull)
+
+  @@index([type, status])
+  @@index([createdAt])
+  @@index([orderId])
+  @@index([registrationId])
+  @@index([membershipId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Fotogalerij
+// ─────────────────────────────────────────────────────────────
+
+model Album {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String?   @db.Text
+  date        DateTime
+  eventId     String?
+  coverUrl    String?
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  event  Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  photos Photo[]
+
+  @@index([published, date])
+}
+
+model Photo {
+  id         String   @id @default(cuid())
+  albumId    String
+  url        String // geoptimaliseerde grote versie (WebP)
+  thumbUrl   String // thumbnail (WebP)
+  storageKey String?
+  thumbKey   String?
+  width      Int
+  height     Int
+  sizeBytes  Int      @default(0)
+  caption    String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  album Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@index([albumId, sortOrder])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Nieuws
+// ─────────────────────────────────────────────────────────────
+
+model NewsPost {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String // korte samenvatting voor overzicht, homepagina en zoekmachines
+  content     String    @db.Text // HTML uit de teksteditor (wordt bij tonen opgeschoond)
+  coverUrl    String?
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  authorName  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published, publishedAt])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Content, contact en partners
+// ─────────────────────────────────────────────────────────────
+
+/// Beheerbare teksten, afbeeldingen en instellingen (sleutel → waarde), zie src/lib/content.ts.
+model SiteContent {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([handled, createdAt])
+}
+
+/// Instellingen per onderdeel (betalingen, lidmaatschap, verzending, e-mail, meldingen) als JSON.
+/// Geheime waarden (API-sleutels, wachtwoorden) staan versleuteld in de JSON (AES-256-GCM).
+model AppSetting {
+  key       String   @id
+  value     Json
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+}
+
+/// Meldingen voor beheerders over belangrijke activiteiten (nieuwe leden, inschrijvingen, bestellingen, ...).
+model AdminNotification {
+  id        String    @id @default(cuid())
+  type      String
+  title     String
+  message   String    @db.Text
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([readAt, createdAt])
+  @@index([createdAt])
+}
+
+/// Voorbereid voor toekomstige uitbreiding: aanbiedingen van partners voor leden.
+model PartnerOffer {
+  id           String    @id @default(cuid())
+  partnerName  String
+  title        String
+  description  String    @db.Text
+  discountCode String?
+  url          String?
+  logoUrl      String?
+  membersOnly  Boolean   @default(true)
+  validUntil   DateTime?
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}

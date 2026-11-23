@@ -1,0 +1,68 @@
+# MazdaClub Nederland – volledige stack voor een VPS
+#
+#   Alleen database (lokale ontwikkeling):   docker compose up -d db
+#   Volledige productie-stack met HTTPS:      docker compose --profile proxy up -d --build
+#
+# Waarden komen uit .env (zie .env.example). DATABASE_URL wordt hieronder voor de app-container
+# overschreven zodat die de database via het interne Docker-netwerk bereikt.
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mazdaclub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mazdaclub}
+      POSTGRES_DB: ${POSTGRES_DB:-mazdaclub}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mazdaclub} -d ${POSTGRES_DB:-mazdaclub}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://mazdaclub.nl}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mazdaclub}:${POSTGRES_PASSWORD:-mazdaclub}@db:5432/${POSTGRES_DB:-mazdaclub}?schema=public&connection_limit=20
+      AUTH_TRUST_HOST: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - uploads:/app/storage/uploads
+    profiles: ["app", "proxy"]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:-mazdaclub.nl}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    profiles: ["proxy"]
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:

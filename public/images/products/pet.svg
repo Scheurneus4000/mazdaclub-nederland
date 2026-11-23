@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+<defs>
+<radialGradient id="bg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e9e9ec"/></radialGradient>
+<radialGradient id="sh"><stop offset="0" stop-color="#000" stop-opacity=".25"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<radialGradient id="cr" cx=".42" cy=".3" r=".8"><stop offset="0" stop-color="#3c3c43"/><stop offset=".6" stop-color="#1d1d21"/><stop offset="1" stop-color="#0d0d0f"/></radialGradient>
+<linearGradient id="br" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26262b"/><stop offset="1" stop-color="#0a0a0b"/></linearGradient>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="592" rx="270" ry="24" fill="url(#sh)"/>
+<path d="M192 452c-6-150 80-220 208-220s214 70 208 220z" fill="url(#cr)"/>
+<path d="M400 236c-30 50-48 130-52 216M400 236c30 50 48 130 52 216M400 236c-90 30-150 100-176 210M400 236c90 30 150 100 176 210" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="3"/>
+<path d="M400 236c-30 50-48 130-52 216M400 236c30 50 48 130 52 216" fill="none" stroke="#fff" stroke-opacity=".06" stroke-width="2" transform="translate(2 0)"/>
+<ellipse cx="400" cy="236" rx="17" ry="9" fill="#141416"/>
+<ellipse cx="400" cy="233" rx="13" ry="6" fill="#C00000"/>
+<path d="M200 444c60 30 340 30 400 0 46 22 60 56 36 80-40 40-150 52-236 52s-196-12-236-52c-24-24-10-58 36-80z" fill="url(#br)"/>
+<path d="M164 524c40 40 150 52 236 52s196-12 236-52" fill="none" stroke="#C00000" stroke-width="4"/>
+<path d="M206 450c60 26 328 26 388 0" fill="none" stroke="#000" stroke-opacity=".6" stroke-width="5"/>
+<g transform="translate(400 350) scale(2.4) translate(-20.5 -20)">
+<rect width="40" height="40" rx="9" fill="#C00000"/>
+<path d="M8 27.5 14.5 12h2.6l3.4 8.6 3.4-8.6h2.6L33 27.5h-3.3l-4.4-10.7-3.6 9h-2.4l-3.6-9-4.4 10.7Z" fill="#fff"/>
+</g>
+<text x="400" y="430" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" letter-spacing="8" text-anchor="middle">MAZDACLUB</text>
+<path d="M270 300c20-30 50-48 90-56" stroke="#fff" stroke-opacity=".12" stroke-width="14" stroke-linecap="round" fill="none"/>
+</svg>
